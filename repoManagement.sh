@@ -18,7 +18,11 @@ echo "Press 3 if you want to delete a project"
 echo "#"
 echo "Press 4 if you want to get the users for a project"
 echo "#"
-echo "Press 5 to leave this script"
+echo "Press 5 if you want to create a bunch of project from a text file"
+echo "#"
+echo "Press 6 if you want to delete a bunch of project from a text file"
+echo "#"
+echo "Press 7 to leave this script"
 read menuS
 
 case "$menuS" in
@@ -74,6 +78,80 @@ exec /home/kam/Courses/GitLab/API-scripts/repoManagement.sh
 ;;
 
 "5")
+clear
+echo "You have chosen to create a bunch of project from a text file !"
+echo "Enter the name of the text file:"
+read textFileName
+#echo "Enter the location of the text file:"
+#read pathToTextFile
+#$file=$pathToTextFile/$textFileName 
+echo "The list of project in $textFileName placed in $pathToTextFile will be created, are you sure ? Y/N"
+read response
+case "$response" in
+    [yY][eE][sS]|[yY])
+    echo "Let's go then !"
+    sleep 1
+    exec 4<$textFileName
+    while read -u4 t; do
+        echo $t
+        curl --header "PRIVATE-TOKEN: UG3RFCZ861_ed8gzSvzc" -X POST "http://172.17.0.5/api/v4/projects?name="$t""
+        echo "The project $t has been created"
+    done
+    ;;
+
+    [nN][oO]|[nN])
+    echo "no"
+    echo "You are going back to the menu now"
+    sleep 2
+    ;;
+
+    *)
+    echo "This option is not available"
+    echo "You are going back to the menu now"
+    ;;
+
+esac
+sleep 2
+exec /home/kam/Courses/GitLab/API-scripts/repoManagement.sh
+;;
+
+"6")
+clear
+echo "You have chosen to delete a bunch of project from a text file !"
+echo "Enter the name of the text file:"
+read textFileName
+#echo "Enter the location of the text file:"
+#read pathToTextFile
+#$file=$pathToTextFile/$textFileName 
+echo "The list of project in $textFileName placed in $pathToTextFile will be deleted, are you sure ? Y/N"
+read response
+case "$response" in
+    [yY][eE][sS]|[yY])
+    echo "Let's go then !"
+    sleep 1
+    exec 4<$textFileName
+    while read -u4 t; do
+        echo $t
+        curl --header "PRIVATE-TOKEN: UG3RFCZ861_ed8gzSvzc" -X DELETE "http://172.17.0.5/api/v4/projects/$projectId"
+        echo "The project $t has been deleted"
+    done
+    ;;
+
+    [nN][oO]|[nN])
+    echo "no"
+    echo "You are going back to the menu now"
+    sleep 2
+    ;;
+
+    *)
+    echo "This option is not available"
+    echo "You are going back to the menu now"
+esac
+sleep 2
+exec /home/kam/Courses/GitLab/API-scripts/repoManagement.sh
+;;
+
+"7")
 echo "You are leaving this script, goodby & see you soon"
 sleep 2
 clear
